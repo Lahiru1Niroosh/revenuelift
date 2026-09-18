@@ -78,8 +78,10 @@ orders = pd.DataFrame({
 
 # Write to DuckDB
 con = duckdb.connect('data/revenuelift.duckdb')
-con.execute("CREATE OR REPLACE TABLE sessions AS SELECT * FROM sessions")
-con.execute("CREATE OR REPLACE TABLE orders AS SELECT * FROM orders")
+con.register('sessions_df', sessions)
+con.register('orders_df', orders)
+con.execute("CREATE OR REPLACE TABLE sessions AS SELECT * FROM sessions_df")
+con.execute("CREATE OR REPLACE TABLE orders AS SELECT * FROM orders_df")
 con.close()
 
 print(f"Sessions generated: {len(sessions)}")

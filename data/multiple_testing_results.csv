@@ -1,0 +1,11 @@
+phase,test,p_value,p_adjusted,significant_raw,significant_after_correction
+A3,Primary: Conversion Rate,0.015064,0.05021333333333333,True,False
+A3,Secondary: AOV,0.275275,0.4164828571428572,False,False
+A4,Guardrail: Refund Rate,0.291538,0.4164828571428572,False,False
+A4,Guardrail: Support Ticket Rate,0.945817,0.9582,False,False
+A4,Guardrail: Page Load Time,0.0,0.0,True,True
+A5,Segment: device_type=mobile,0.0006,0.0029999999999999996,True,True
+A5,Segment: device_type=tablet,0.937,0.9582,False,False
+A5,Segment: device_type=desktop,0.1082,0.2164,False,False
+A5,Segment: user_type=new,0.0344,0.086,True,False
+A5,Segment: user_type=returning,0.9582,0.9582,False,False
