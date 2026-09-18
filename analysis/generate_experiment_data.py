@@ -21,6 +21,13 @@ CONVERSION_RATES = {
 
 REFUND_RATE = {'control': 0.04, 'treatment': 0.055}  # treatment regresses here
 
+# Page load time (seconds) — treatment slightly slower on average, but not dramatically
+PAGE_LOAD_MEAN = {'control': 2.50, 'treatment': 2.58}
+PAGE_LOAD_SD = 0.40
+
+# Support ticket rate — small uptick for treatment, unlikely to be significant on its own
+SUPPORT_TICKET_RATE = {'control': 0.030, 'treatment': 0.034}
+
 def generate_sessions(variant, n):
     devices = np.random.choice(list(DEVICE_SPLIT), size=n, p=list(DEVICE_SPLIT.values()))
     user_types = np.random.choice(list(USER_TYPE_SPLIT), size=n, p=list(USER_TYPE_SPLIT.values()))
@@ -31,13 +38,19 @@ def generate_sessions(variant, n):
         np.random.random() < CONVERSION_RATES[(variant, d)] for d in devices
     ])
 
+    n = len(devices)
+    page_load_time = np.round(np.random.normal(PAGE_LOAD_MEAN[variant], PAGE_LOAD_SD, n), 2)
+    support_ticket = np.random.random(n) < SUPPORT_TICKET_RATE[variant]
+
     return pd.DataFrame({
         'user_id': np.random.randint(100000, 999999, n),
         'variant': variant,
         'device_type': devices,
         'user_type': user_types,
         'session_start': session_starts,
-        'converted': converted
+        'converted': converted,
+        'page_load_time_seconds': page_load_time,
+        'support_ticket': support_ticket
     })
 
 control = generate_sessions('control', SAMPLE_SIZE_PER_GROUP)
@@ -77,3 +90,7 @@ print("\nConversion rate by variant and device:")
 print(sessions.groupby(['variant', 'device_type'])['converted'].mean())
 print("\nRefund rate by variant:")
 print(orders.merge(sessions[['session_id', 'variant']], on='session_id').groupby('variant')['refunded'].mean())
+print("\nAvg page load time by variant:")
+print(sessions.groupby('variant')['page_load_time_seconds'].mean())
+print("\nSupport ticket rate by variant:")
+print(sessions.groupby('variant')['support_ticket'].mean())
