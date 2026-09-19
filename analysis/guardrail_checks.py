@@ -23,6 +23,7 @@ def proportion_guardrail(name, control_events, control_n, treatment_events, trea
     ci_high = change + 1.96 * se
 
     regressed = (p_value < 0.05) and (change > 0)  # worse direction = rate went UP
+    pct_change = (change / control_rate) * 100 if control_rate > 0 else 0
 
     print(f"=== Guardrail: {name} ===")
     print(f"Control rate:   {control_rate:.4%}")
@@ -31,7 +32,14 @@ def proportion_guardrail(name, control_events, control_n, treatment_events, trea
     print(f"P-value: {p_value:.6f}")
     print(f"Regressed significantly: {'YES — FLAG FOR REVIEW' if regressed else 'NO'}\n")
 
-    results.append({'metric': name, 'p_value': p_value, 'regressed': regressed})
+    results.append({
+        'metric': name,
+        'control_value': control_rate,
+        'treatment_value': treatment_rate,
+        'pct_change': pct_change,
+        'p_value': p_value,
+        'regressed': regressed
+    })
 
 # --- Guardrail 1: Refund rate ---
 refunds = con.execute("""
@@ -69,7 +77,15 @@ print(f"Difference: {treatment_load.mean() - control_load.mean():.3f}s")
 print(f"P-value: {load_p_value:.6f}")
 print(f"Regressed significantly: {'YES — FLAG FOR REVIEW' if load_regressed else 'NO'}\n")
 
-results.append({'metric': 'Page Load Time', 'p_value': load_p_value, 'regressed': load_regressed})
+load_pct_change = ((treatment_load.mean() - control_load.mean()) / control_load.mean()) * 100
+results.append({
+    'metric': 'Page Load Time',
+    'control_value': control_load.mean(),
+    'treatment_value': treatment_load.mean(),
+    'pct_change': load_pct_change,
+    'p_value': load_p_value,
+    'regressed': load_regressed
+})
 
 # --- Summary ---
 print("=== Guardrail Summary ===")
