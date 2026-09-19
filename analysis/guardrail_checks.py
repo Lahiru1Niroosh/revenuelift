@@ -1,7 +1,9 @@
 import duckdb
 import numpy as np
+import pandas as pd
 from statsmodels.stats.proportion import proportions_ztest
 from scipy import stats
+
 
 con = duckdb.connect('data/revenuelift.duckdb')
 
@@ -73,5 +75,9 @@ results.append({'metric': 'Page Load Time', 'p_value': load_p_value, 'regressed'
 print("=== Guardrail Summary ===")
 for r in results:
     print(f"{r['metric']}: {'REGRESSED' if r['regressed'] else 'OK'} (p={r['p_value']:.4f})")
+
+guardrail_df = pd.DataFrame(results)
+guardrail_df.to_csv('data/guardrail_results.csv', index=False)
+print("\nSaved to data/guardrail_results.csv")
 
 con.close()
