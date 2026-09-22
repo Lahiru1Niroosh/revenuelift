@@ -64,7 +64,7 @@ immediately flag which guardrails held and which regressed.
 
 ## Repository Structure
 
-\```
+```
 revenuelift/
 ├── analysis/           # Python scripts — data generation through decision engine
 ├── data/                # DuckDB database and generated CSVs
@@ -72,7 +72,7 @@ revenuelift/
 ├── docs/                # Design docs, methodology, results, screenshots
 ├── powerbi/             # RevenueLift.pbix
 └── requirements.txt
-\```
+```
 
 ## Running the Analysis
 
