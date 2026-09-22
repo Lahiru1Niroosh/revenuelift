@@ -76,7 +76,7 @@ revenuelift/
 
 ## Running the Analysis
 
-\```bash
+```bash
 python analysis/power_analysis.py
 python analysis/generate_experiment_data.py
 python analysis/significance_testing.py
@@ -85,7 +85,7 @@ python analysis/segment_analysis.py
 python analysis/multiple_testing_correction.py
 python analysis/decision_engine.py
 pytest tests/ -v
-\```
+```
 
 ## Methodology
 
